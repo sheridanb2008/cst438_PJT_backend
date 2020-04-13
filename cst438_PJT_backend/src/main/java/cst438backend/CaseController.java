@@ -22,6 +22,9 @@ public class CaseController {
 	
 	@Autowired
 	CaseRepository caseRepository;
+	
+	@Autowired
+	CountryStatsRepository countryStatsRepository;
 
 	@GetMapping("/covid/cases/{state}")
 	public ResponseEntity<List<Case>> get(@PathVariable("state") String state) {
@@ -31,6 +34,15 @@ public class CaseController {
 			return new ResponseEntity<List<Case> >( HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<List<Case> >(theCases, HttpStatus.OK);		
+	}
+	
+	@GetMapping("/covid/latest/{country}")
+	public ResponseEntity<CountryStats> getCountryTotals(@PathVariable("country") String country) {
+		CountryStats countryStats = countryStatsRepository.getCountryTotals(country);
+		if (countryStats == null) {
+			return new ResponseEntity<CountryStats>( HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<CountryStats>(countryStats, HttpStatus.OK);	
 	}
 	
 	@GetMapping("/covid/cases/confirmed/{country}")
