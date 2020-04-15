@@ -20,6 +20,9 @@ public class CaseController {
 		System.out.println("Help!");
 	}
 	
+	@Autowired 
+	CovidStatsRepository statsRepository;
+	
 	@Autowired
 	CaseRepository caseRepository;
 	
@@ -45,11 +48,28 @@ public class CaseController {
 		return new ResponseEntity<CountryStats>(countryStats, HttpStatus.OK);	
 	}
 	
+	@GetMapping("/covid/lateststate/{state}")
+	public ResponseEntity<CovidStats> getUSStateTotals(@PathVariable("state") String usState) {
+		CovidStats covidStats = statsRepository.getUSStateTotals(usState);
+		if (covidStats == null) {
+			return new ResponseEntity<CovidStats>( HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<CovidStats>(covidStats, HttpStatus.OK);	
+	}
+	
 	@GetMapping("/covid/cases/confirmed/{country}")
 	public ResponseEntity<String> getConfirmed(@PathVariable("country") String country) {
 		//Case case = caseRepository.findByState(state);
 		Long confirmedTotal = caseRepository.findConfirmedByCountry(country);
 		String msg  = "{\"Confirmed\": \""+ confirmedTotal + 
+	               "\"}" ;
+		return new ResponseEntity<String>(msg, HttpStatus.OK);		
+	}
+	
+	@GetMapping("/covid/cases/lastupdate")
+	public ResponseEntity<String> getLastUpdate() {
+		String lastUpdate = caseRepository.getLastUpdateDate();
+		String msg  = "{\"LastUpdate\": \""+ lastUpdate + 
 	               "\"}" ;
 		return new ResponseEntity<String>(msg, HttpStatus.OK);		
 	}
