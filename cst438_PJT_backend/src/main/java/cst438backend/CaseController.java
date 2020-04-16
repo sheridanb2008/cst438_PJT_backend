@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import java.sql.Date;
 
 @RestController
 public class CaseController {
@@ -48,22 +49,41 @@ public class CaseController {
 		return new ResponseEntity<CountryStats>(countryStats, HttpStatus.OK);	
 	}
 	
-	@GetMapping("/covid/lateststate/{state}")
-	public ResponseEntity<CovidStats> getUSStateTotals(@PathVariable("state") String usState) {
-		CovidStats covidStats = statsRepository.getUSStateTotals(usState);
+	@GetMapping("/covid/usstate/{state}")
+    public ResponseEntity<CovidStats> getUSStateTotals(@PathVariable("state") String usState, 
+                                                       @RequestParam(required = false,defaultValue = "") String theDate) {
+        
+        if(theDate.length() == 0) {
+            // Search for the most recent.
+            theDate = caseRepository.getLastUpdateDate();
+        }
+        
+        CovidStats covidStats = statsRepository.getUSStateTotals(usState,theDate);
 		if (covidStats == null) {
-			return new ResponseEntity<CovidStats>( HttpStatus.NOT_FOUND);
+            CovidStats emptyStats = new CovidStats();
+
+            emptyStats.lastUpdated = Date.valueOf(theDate);
+            return new ResponseEntity<CovidStats>(emptyStats, HttpStatus.OK);
 		}
 		return new ResponseEntity<CovidStats>(covidStats, HttpStatus.OK);	
 	}
 	
-	@GetMapping("/covid/cases/confirmed/{country}")
-	public ResponseEntity<String> getConfirmed(@PathVariable("country") String country) {
-		//Case case = caseRepository.findByState(state);
-		Long confirmedTotal = caseRepository.findConfirmedByCountry(country);
-		String msg  = "{\"Confirmed\": \""+ confirmedTotal + 
-	               "\"}" ;
-		return new ResponseEntity<String>(msg, HttpStatus.OK);		
+	@GetMapping("/covid/country/{country}")
+    public ResponseEntity<CovidStats> getConfirmed(@PathVariable("country") String country,
+                                               @RequestParam(required = false,defaultValue = "") String theDate) {
+        if(theDate.length() == 0) {
+            // Search for the most recent.
+            theDate = caseRepository.getLastUpdateDate();
+        }
+        
+        CovidStats covidStats = statsRepository.getCountryTotals(country,theDate);
+        if (covidStats == null) {
+            CovidStats emptyStats = new CovidStats();
+
+            emptyStats.lastUpdated = Date.valueOf(theDate);
+            return new ResponseEntity<CovidStats>(emptyStats, HttpStatus.OK);
+        }
+        return new ResponseEntity<CovidStats>(covidStats, HttpStatus.OK);		
 	}
 	
 	@GetMapping("/covid/cases/lastupdate")
