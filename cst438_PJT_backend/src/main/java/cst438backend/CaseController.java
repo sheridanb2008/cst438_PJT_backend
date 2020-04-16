@@ -49,7 +49,7 @@ public class CaseController {
 		return new ResponseEntity<CountryStats>(countryStats, HttpStatus.OK);	
 	}
 	
-	@GetMapping("/covid/usstate/{state}")
+	@GetMapping("/covid/bydate/usstate/{state}")
     public ResponseEntity<CovidStats> getUSStateTotals(@PathVariable("state") String usState, 
                                                        @RequestParam(required = false,defaultValue = "") String theDate) {
         
@@ -66,9 +66,20 @@ public class CaseController {
             return new ResponseEntity<CovidStats>(emptyStats, HttpStatus.OK);
 		}
 		return new ResponseEntity<CovidStats>(covidStats, HttpStatus.OK);	
+    }
+    
+    @GetMapping("/covid/daterange/usstate/{state}")
+    public ResponseEntity<List<CovidStats>> getUStateTotalsInRange(@PathVariable("state") String usState, 
+                                                       @RequestParam(required = true) String startDate,
+                                                       @RequestParam(required = true) String endDate) {
+
+        List<CovidStats> covidStats = statsRepository.getStateInRange(usState,startDate,endDate);
+		
+		return new ResponseEntity<List<CovidStats>>(covidStats, HttpStatus.OK);	
 	}
+
 	
-	@GetMapping("/covid/country/{country}")
+	@GetMapping("/covid/bydate/country/{country}")
     public ResponseEntity<CovidStats> getConfirmed(@PathVariable("country") String country,
                                                @RequestParam(required = false,defaultValue = "") String theDate) {
         if(theDate.length() == 0) {
@@ -84,6 +95,16 @@ public class CaseController {
             return new ResponseEntity<CovidStats>(emptyStats, HttpStatus.OK);
         }
         return new ResponseEntity<CovidStats>(covidStats, HttpStatus.OK);		
+    }
+    
+    @GetMapping("/covid/daterange/country/{country}")
+    public ResponseEntity<List<CovidStats>> getCountryTotalsInRange(@PathVariable("country") String country, 
+                                                       @RequestParam(required = true) String startDate,
+                                                       @RequestParam(required = true) String endDate) {
+
+        List<CovidStats> covidStats = statsRepository.getCountryInRange(country,startDate,endDate);
+		
+		return new ResponseEntity<List<CovidStats>>(covidStats, HttpStatus.OK);	
 	}
 	
 	@GetMapping("/covid/cases/lastupdate")
