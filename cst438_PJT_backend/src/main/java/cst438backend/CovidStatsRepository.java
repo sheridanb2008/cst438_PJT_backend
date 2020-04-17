@@ -33,5 +33,11 @@ public interface CovidStatsRepository extends JpaRepository<CovidStats,Long> {
 	List<CovidStats> getCountryInRange(String country, String startDate, String endDate);
 	
 	@Query(value = "select max(Last_Update) from cases", nativeQuery = true)
-	String getLastUpdateDate();
+    String getLastUpdateDate();
+    
+    @Query(value = "select distinct(Country_Region) from cases", nativeQuery = true)
+    List<String> getUniqueCountries();
+
+    @Query(value = "select distinct(Province_State) from cases where Country_Region='US'", nativeQuery = true)
+    List<String> getUniqueUSStates();
 }

@@ -113,6 +113,22 @@ public class CaseController {
 		String msg  = "{\"LastUpdate\": \""+ lastUpdate + 
 	               "\"}" ;
 		return new ResponseEntity<String>(msg, HttpStatus.OK);		
+    }
+    
+    @GetMapping("/covid/countrylist")
+    public ResponseEntity<List<String>> getCountryList() {
+
+        List<String> countries = statsRepository.getUniqueCountries();
+		
+		return new ResponseEntity<List<String>>(countries, HttpStatus.OK);	
+    }
+    
+    @GetMapping("/covid/usstatelist")
+    public ResponseEntity<List<String>> getUSStateList() {
+
+        List<String> states = statsRepository.getUniqueUSStates();
+		
+		return new ResponseEntity<List<String>>(states, HttpStatus.OK);	
 	}
 	
 	
