@@ -4,8 +4,6 @@ import java.sql.Date;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 
 @Entity
 @Table(name="cases")
