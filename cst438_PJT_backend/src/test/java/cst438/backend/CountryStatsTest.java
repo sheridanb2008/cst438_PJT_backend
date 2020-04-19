@@ -54,6 +54,7 @@ public class CountryStatsTest {
 	
 	private JacksonTester<CountryStats> json;
 	
+
 	
 	@Before
 	public void setup() {
@@ -64,31 +65,28 @@ public class CountryStatsTest {
 	
 	
 	@Test
-	public void test() {
-		CountryStats attempt = new CountryStats("US",1,2,3,4,5,java.sql.Date.valueOf("2020-04-01"));
-		CountryStats expected = new CountryStats("US",1,2,3,4,5,java.sql.Date.valueOf("2020-04-01"));
+	public void countryTotalsFoundTest() throws Exception{
+		CountryStats attempt = new CountryStats(5,1,2,3,4,"US",java.sql.Date.valueOf("2020-04-01"));
+		CountryStats expected = new CountryStats(5,1,2,3,4,"US",java.sql.Date.valueOf("2020-04-01"));
 		given(countryStatsRepository.getCountryTotals("US")).willReturn(expected);		
 		
-		try {
-			
-			MockHttpServletResponse response = mvc.perform(		 
-			        get("/covid/latest/US").contentType(MediaType.APPLICATION_JSON)
-			                .content(json.write(attempt).getJson()))
-			        .andReturn().getResponse();
+		MockHttpServletResponse response = mvc.perform(get("/covid/latest/US").contentType(MediaType.APPLICATION_JSON)
+				.content(json.write(attempt).getJson())).andReturn().getResponse();
 			assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 			String contentStr = response.getContentAsString();
 			String expectedStr = json.write(expected).getJson();
 			assertThat(contentStr).isEqualTo(expectedStr);
-			//System.out.println(contentStr);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-		
+					
+	}
+	
+	@Test
+	public void countryTotalsNotFoundTest() throws Exception{
+		CountryStats attempt = new CountryStats(5,1,2,3,4,"US",java.sql.Date.valueOf("2020-04-01"));
+						
+		MockHttpServletResponse response = mvc.perform(get("/covid/latest/noCountry").contentType(MediaType.APPLICATION_JSON)
+				.content(json.write(attempt).getJson())).andReturn().getResponse();
+			assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+					
 	}
 
 }
