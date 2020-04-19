@@ -37,7 +37,13 @@ public class CaseController {
 		return new ResponseEntity<CountryStats>(countryStats, HttpStatus.OK);	
 	}
 	
-	
+    @GetMapping("/covid/countrylist")
+    public ResponseEntity<List<String>> getCountryList() {
+
+        List<String> countries = statsRepository.getUniqueCountries();
+		
+		return new ResponseEntity<List<String>>(countries, HttpStatus.OK);	
+    }
 
 // ---------  For Future --------
 //	
@@ -117,13 +123,6 @@ public class CaseController {
 //		return new ResponseEntity<String>(msg, HttpStatus.OK);		
 //    }
 //    
-//    @GetMapping("/covid/countrylist")
-//    public ResponseEntity<List<String>> getCountryList() {
-//
-//        List<String> countries = statsRepository.getUniqueCountries();
-//		
-//		return new ResponseEntity<List<String>>(countries, HttpStatus.OK);	
-//    }
 //    
 //    @GetMapping("/covid/usstatelist")
 //    public ResponseEntity<List<String>> getUSStateList() {
