@@ -29,7 +29,21 @@ public class CovidStats {
 	public long getId() {
 		return id;
 	}
+	
+	public CovidStats(long id, int active, int confirmed, int deaths, int recovered, Date lastUpdated) {
+		this.id = id;
+		this.active = active;
+		this.confirmed = confirmed;
+		this.recovered = recovered;
+		this.deaths = deaths;
+		this.lastUpdated = lastUpdated;
+		
+	}
 
+
+	public CovidStats() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public int getActive() {
 		return active;

@@ -4,6 +4,8 @@ import java.sql.Date;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+
 
 @Entity
 @Table(name="cases")
@@ -85,6 +87,18 @@ public class CountryStats {
 
 	@Column(name="Last_Update")
 	Date lastUpdated;
+	
+	public CountryStats(String country, long id, int active, int confirmed, int deaths, int recovered, Date lastUpdated) {
+		this.id = id;
+		this.active = active;
+		this.confirmed = confirmed;
+		this.recovered = recovered;
+		this.deaths = deaths;
+		this.lastUpdated = lastUpdated;
+		this.country = country;
+		
+	}
+
 
 	
 	

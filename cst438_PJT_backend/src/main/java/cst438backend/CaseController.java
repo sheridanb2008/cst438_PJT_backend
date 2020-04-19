@@ -41,6 +41,7 @@ public class CaseController {
 	public ResponseEntity<CountryStats> getCountryTotals(@PathVariable("country") String country) {
 		CountryStats countryStats = countryStatsRepository.getCountryTotals(country);
 		if (countryStats == null) {
+			System.out.println("No such country found!");
 			return new ResponseEntity<CountryStats>( HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<CountryStats>(countryStats, HttpStatus.OK);	
