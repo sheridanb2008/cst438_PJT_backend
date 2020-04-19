@@ -54,10 +54,6 @@ public class CountryStatsTest {
 	
 	private JacksonTester<CountryStats> json;
 	
-	@Test
-	public void contextLoads() {
-		
-	}
 	
 	@Before
 	public void setup() {
